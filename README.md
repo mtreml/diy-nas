@@ -218,7 +218,7 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 |       | RAID5    | RAID5 - NFS | RAID5 - CIFS |
 |-------|----------|-------------|--------------|
 | Read  | 356 MB/s | 86.30 MB/s  | 85.3 MB/s    |
-| Write | 336 MB/s | 14.80 MB/s  | 87.8 MB/s    |
+| Write | 336 MB/s | 43.60 MB/s  | 87.8 MB/s    |
 
 ### Resources
 - https://louwrentius.com/zfs-performance-on-hp-proliant-microserver-gen8-g1610t.html
