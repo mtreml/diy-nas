@@ -206,10 +206,14 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 
 - Hard Disk Drive (HDD) bays 1 and 2 support 6.0 Gb/s = 750 MB/s SATA
 - HDD bays 3 and 4 support 3.0 Gb/s = 375 MB/s SATA
-- Copied via 1 Gb/s = 125 MB/s ethernet port
 - Testfile has ~32 GB
-- Read: `dd if=/mnt/share/testfile.tar.gz of=/dev/null bs=1M`
-- Write: `dd if=/dev/zero of=/mnt/share/testfile_1.tar.gz bs=1M count=32000 conv=sync`
+- Local copies
+  - Read: `dd if=/srv/disk-by-uid/share/testfile.tar.gz of=/dev/null bs=1M`
+  - Write: `dd if=/dev/zero of=/srv/disk-by-uid/share/testfile_1.tar.gz bs=1M count=32000 conv=sync`
+- Network (CIFS/NFS) via 1 Gb/s = 125 MB/s ethernet port
+  - Read: `dd if=/mnt/share/testfile.tar.gz of=/dev/null bs=1M`
+  - Write: `dd if=/dev/zero of=/mnt/share/testfile_1.tar.gz bs=1M count=32000 conv=sync`
+
 
 |       | RAID5    | RAID5 - NFS | RAID5 - CIFS |
 |-------|----------|-------------|--------------|
