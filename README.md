@@ -1,3 +1,13 @@
+# Goals
+
+- Build a DIY NAS just for the fun of it
+- RAID5 for read performance & failure safety (parity)
+- Full disk encryption
+- < 10 users
+- Server will shutdown frequently for energy saving
+
+
+
 # Table of contents
 
 - [Goals](#goals)
@@ -24,15 +34,7 @@
   - [Mount NFS share in Ubuntu](#mount-nfs-share-in-ubuntu)
 
 
----
- 
-# Goals
-
-- Build a DIY NAS just for the fun of it
-- RAID5 for read performance & failure safety (parity)
-- Full disk encryption
-- < 10 users
-- Server will shutdown frequently for energy saving
+TOC created with https://imthenachoman.github.io/nGitHubTOC/
 
 
 ---
