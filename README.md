@@ -213,7 +213,7 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 
 |       | RAID5    | RAID5 - NFS | RAID5 - CIFS |
 |-------|----------|-------------|--------------|
-| Read  | 356 MB/s | 50.79 MB/s  | 85.3 MB/s    |
+| Read  | 356 MB/s | 86.30 MB/s  | 85.3 MB/s    |
 | Write | 336 MB/s | 14.80 MB/s  | 87.8 MB/s    |
 
 ### Resources
