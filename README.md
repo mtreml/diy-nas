@@ -1,3 +1,5 @@
+**WIP - comments & additions welcome!**
+
 # Goals
 
 - Build a DIY NAS just for the fun of it
