@@ -10,7 +10,6 @@
 
 # Table of contents
 
-- [Goals](#goals)
 - [Hardware](#hardware)
   - [HPE Proliant Microserver Gen8](#hpe-proliant-microserver-gen8)
   - [LTE Modem / Router](#lte-modem--router)
