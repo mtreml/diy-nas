@@ -45,23 +45,22 @@ TOC created with https://imthenachoman.github.io/nGitHubTOC/
 
 See the official specifications at https://support.hpe.com/hpesc/public/docDisplay?docId=emr_na-c03793258#N1048F
 
-My Hardware
+### Specifications
 - Intel Xeon E3-1220LV2 (17 W)
 - 8 GB RAM
 - 16 GB SanDisk A1 micro SD-card for OS (OS-drive on internal slot)
 - 4 x 4 TB Western Digital Red Plus (data-drives on SATA slots)
 
-BIOS Update v2014.06.06 -> v2019.04.04
+### BIOS Update v2014.06.06 -> v2019.04.04**
 - Get the firmware file *SP99427.exe* at https://support.hpe.com/connect/s/search
 - Create USB-Key on Windows & boot server from it.
 
-iLO Firmware Update v2.10 (15.1.2015) -> v2.78 (22.4.2021)
+### iLO Firmware Update v2.10 (15.1.2015) -> v2.78 (22.4.2021)
 - Get the firmware file *cp046467.exe* at https://support.hpe.com/connect/s/search
 - Connect the server at the iLO network interface
 - Login into the iLO web interface via IPv6 (credentials on the sticker at the backside of the microserver)
 - Upload new firmware and flash it.
-
-Get an ILO Advanced Key and enter it in the iLO web interface
+- Get an ILO Advanced Key and enter it in the iLO web interface
 
 ## LTE Modem / Router
 
