@@ -310,6 +310,10 @@ Create a NAS user: `User Management > Users > + > nas_user`
     ```sh
     //192.168.x.xxx/share /media/share cifs credentials=/root/.smbcredentials,uid=ubuntu_user,noperm,rw 0 0
     ```
+ - Mount
+    ```sh
+    sudo mount -a
+    ```
 
 ## Mount NFS share in Ubuntu
 
