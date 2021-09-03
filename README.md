@@ -3,8 +3,8 @@
 # Goals
 
 - Build a DIY NAS just for the fun of it
-- RAID5 for read performance & failure safety (parity)
-- Full disk encryption
+- RAID5 for read performance & failure safety
+- Full disk encryption with LUKS
 - < 10 users
 - Server will shutdown frequently for energy saving
 
