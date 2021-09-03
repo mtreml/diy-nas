@@ -229,13 +229,16 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
   - Write: `dd if=/dev/zero of=/mnt/share/testfile_1.tar.gz bs=1M count=32000 conv=sync`
 
 
-|       | RAID5    | RAID5 - NFS | RAID5 - CIFS |
-|-------|----------|-------------|--------------|
-| Read  | 356 MB/s | 86.30 MB/s  | 85.3 MB/s    |
-| Write | 336 MB/s | 43.60 MB/s  | 87.8 MB/s    |
+|       | RAID5    | RAID5+LUKS+LVM | RAID5*+LUKS+LVM | RAID5 - NFS | RAID5 - CIFS |
+|-------|----------|----------------|-----------------|-------------|--------------|
+| Read  | 356 MB/s | 350 MB/s       | 375 MB/s        | 86.30 MB/s  | 85.3 MB/s    |
+| Write | 336 MB/s | 368 MB/s       | 368 MB/s        | 43.60 MB/s  | 87.8 MB/s    |
+
+*: with stripe_cache_size=8192
 
 ### Resources
 - https://louwrentius.com/zfs-performance-on-hp-proliant-microserver-gen8-g1610t.html
+- https://superuser.com/questions/305716/bad-performance-with-linux-software-raid5-and-luks-encryption
 
 
 ---
