@@ -236,6 +236,8 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 
 *: with stripe_cache_size=8192
 
+This is more or less the maximum performance the hardware controller allows since the RAID array uses all four HDD bays.
+
 ### Resources
 - https://louwrentius.com/zfs-performance-on-hp-proliant-microserver-gen8-g1610t.html
 - https://superuser.com/questions/305716/bad-performance-with-linux-software-raid5-and-luks-encryption
