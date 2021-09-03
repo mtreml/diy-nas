@@ -95,7 +95,7 @@ This guide follows the documentation of OMV version 5.x since 6.x is still under
     ```
 - Install additional packages
     ```sh
-    apt-get apt-get install -y screen htop
+    apt-get apt-get install -y screen htop cryptsetup
     ```
 - Install omv-extras to have access to more plugins
     ```sh
@@ -126,7 +126,7 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 
 - Wipe disks before doing anything else
     ```sh
-    sth
+    haveged -n 0 | dd of=/dev/sd[abcd]
     ```
 
 - Create
@@ -136,13 +136,13 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 
 ### RAID device on sda, sdb, sdc, sdd
 
-- Create
+- Create RAID array
     ```sh
-    screen -d -m mdadm --create --verbose --level=5 --metadata=1.2 --raid-devices=4 /dev/md0 /dev/sd[abcd]1
+    screen -d -m mdadm --create --verbose --level=5 --chunk=512 --metadata=1.2 --raid-devices=4 /dev/md0 /dev/sd[abcd]1
     ```
 - Watch the process:  this takes ~ 5 h
     ```sh
-    mdadm --readwrite /dev/md0
+    screen -d -m mdadm --readwrite /dev/md0
     ```
 - Save the RAID configuration
     ```sh
@@ -150,34 +150,46 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
     ```
 
 ### Encrypted LUKS container on the RAID device
-
+- Benchmark 
+    ```sh
+     cryptsetup benchmark
+    ```
+  This gives 1555.8 MiB/s (encryption) and 1652.4 MiB/s (decryption) for aes-xts with 256b key.
+ 
 - Create a LUKS container
     ```sh
-     cryptsetup luksFormat --cipher aes-xts-plain64 --hash sha512 /dev/md0
+     cryptsetup luksFormat --cipher aes-xts-plain64 --hash sha512 -s 512 /dev/md0
+    ```
+- Show info
+    ```sh
+    cryptsetup luksDump /dev/md0
     ```
 - Open the new LUKS container
     ```sh
-    cryptsetup luksDump /dev/md0
-    ```
-- Get crypt setup
-    ```sh
-    cryptsetup luksDump /dev/md0
+    cryptsetup luksOpen /dev/md0 crypt-raid
     ```
     
 ### LVM
 
 - Create
     ```sh
-    sth
+    # Specify md0 as physical volume (make sure dataalignment matches chunk size of RAID)
+    pvcreate --dataalignment=512 /dev/crypt-raid
+    
+    # Create new volume group
+    vgcreate raid-vg /dev/mapper/crypt-raid
+    
+    # Create logical volume
+    lvcreate -l 100%FREE --name mrm raid-vg
     ```
 
 ### File system
 
 - `Storage > File Systems > + > Create`
 
-- EXT4 on RAID device: this takes ~ 10 mins
+- EXT4 on RAID device: this takes ~ 3 mins
     ```sh
-    screen -d -m mkfs.ext4 -b 4096 -m 0 -E lazy_itable_init=0,lazy_journal_init=0 -O 64bit /dev/mapper/crypt-raid
+    screen -d -m mkfs.ext4 -m 0 /dev/mapper/raid-vg-mrm
     ```
 - Verify
     ```sh
