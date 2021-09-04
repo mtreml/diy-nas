@@ -4,9 +4,8 @@
 
 - Build a DIY NAS based on OpenMediaVault 6
 - RAID5 for read performance & failure safety
-- Encryption with LUKS
+- Data drive encryption with LUKS
 - Automatic unlocking of encrypted drive in a known network
-- < 10 users
 - Server will shutdown frequently for energy saving
 
 
