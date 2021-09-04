@@ -161,7 +161,7 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
     haveged -n 0 | dd of=/dev/sd[abcd]
     ```
 
-- Create
+- Create partition
     ```sh
     sth
     ```
@@ -206,7 +206,23 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
     ```sh
     cryptsetup luksOpen /dev/md0 crypt-raid
     ```
-    
+- Find UUID of /dev/md0
+    ```sh
+    blkid
+    ```
+- Edit `/etc/crypttab` and add
+    ```sh
+    crypt-raid UUID=xxxx none luks
+    ```
+- Recreate initramfs
+  ```sh
+  update-initramfs -u -k all
+  ```
+- Change GRUB_TIMEOUT to 1s
+   ```sh
+   nano /etc/default/grub
+   update-grub
+   ```   
 ### LVM
 
 - Create
@@ -411,8 +427,10 @@ This is more or less the maximum performance the hardware controller allows sinc
     sudo ufw allow in http comment 'allow HTTP traffic in'
     sudo ufw allow out https comment 'allow HTTPS traffic out'
     sudo ufw allow in https comment 'allow HTTPS traffic in'
-    sudo ufw allow out 445 comment 'allow SMB traffic out'
-    sudo ufw allow in 445 comment 'allow SMB traffic in'
+    sudo ufw allow out 445/tcp comment 'allow SMB traffic out'
+    sudo ufw allow in 445/tcp comment 'allow SMB traffic in'
+    sudo ufw allow out 8888/tcp comment 'allow tang traffic out'
+    sudo ufw allow in 8888/tcp comment 'allow tang traffic in'
 
     sudo ufw enable
     sudo ufw status verbose
