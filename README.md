@@ -220,14 +220,8 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 
 ### RAID device on sda, sdb, sdc, sdd
 
-- Create RAID array
-    ```sh
-    screen -d -m mdadm --create --verbose --level=5 --chunk=512 --metadata=1.2 --raid-devices=4 /dev/md0 /dev/sd[abcd]1
-    ```
-- Watch the process:  this takes ~ 5 h
-    ```sh
-    screen -d -m mdadm --readwrite /dev/md0
-    ```
+- Create RAID array: `Storage > RAID Management > +`
+
 - Save the RAID configuration
     ```sh
     mdadm --detail --scan >> /etc/mdadm/mdadm.conf
