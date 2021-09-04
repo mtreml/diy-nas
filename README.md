@@ -2,11 +2,12 @@
 
 # Goals
 
-- Build a DIY NAS based on OpenMediaVault 6
-- RAID5 for read performance & failure safety
-- Data drive encryption with LUKS
-- Automatic unlocking of encrypted drive in a known network
-- Server will shutdown frequently for energy saving
+- Build a DIY NAS 
+- Data and OS live on different physical drives
+- OS drive: OpenMediaVault 6 on microSD card (cloned for backup)
+- Data drive: RAID5 -> LUKS -> LVM -> LUKS for read performance, failure safety and privacy
+- Automatic unlocking of encrypted drive in a known network with Tang & Clevis
+- Server should be able to do unattended shutdowns / reboots for energy saving
 
 
 # Table of contents
