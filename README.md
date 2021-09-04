@@ -388,6 +388,8 @@ This is more or less the maximum performance the hardware controller allows sinc
     sudo awk '$5 >= 3071' /etc/ssh/moduli | sudo tee /etc/ssh/moduli.tmp
     sudo mv /etc/ssh/moduli.tmp /etc/ssh/moduli    
     ```
+    
+## Network
 - Firewall
     ```sh
     sudo apt install ufw
