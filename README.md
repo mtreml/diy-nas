@@ -2,7 +2,7 @@
 
 # Goals
 
-- Build a DIY NAS based on OpenMediaVault 6 just for the fun of it
+- Build a DIY NAS based on OpenMediaVault 6
 - RAID5 for read performance & failure safety
 - Full disk encryption with LUKS
 - < 10 users
