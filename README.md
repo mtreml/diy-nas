@@ -14,6 +14,9 @@
 
 - [Hardware](#hardware)
   - [HPE Proliant Microserver Gen8](#hpe-proliant-microserver-gen8)
+    - [Specifications](#specifications)
+    - [BIOS Update v2014.06.06 -> v2019.04.04**](#bios-update-v20140606---v20190404)
+    - [iLO Firmware Update v2.10 (15.1.2015) -> v2.78 (22.4.2021)](#ilo-firmware-update-v210-1512015---v278-2242021)
   - [LTE Modem / Router](#lte-modem--router)
 - [Software](#software)
   - [Installation and initial configuration of OpenMediaVault (OMV) 6](#installation-and-initial-configuration-of-openmediavault-omv-6)
@@ -27,12 +30,17 @@
   - [Benchmarks](#benchmarks)
     - [Resources](#resources-1)
 - [Secure your server](#secure-your-server)
+  - [Force strong user passwords](#force-strong-user-passwords)
+  - [Enable unattended updates](#enable-unattended-updates)
+  - [Limit access to sudo & su](#limit-access-to-sudo--su)
   - [SSH](#ssh)
+  - [Network](#network)
   - [Resources](#resources-2)
 - [Administration](#administration)
   - [Create a shared folder](#create-a-shared-folder)
-  - [Mount smb/cifs share in Ubuntu](#mount-smbcifs-share-in-ubuntu)
+  - [Mount smb/cifs share on the (Ubuntu) client](#mount-smbcifs-share-on-the-ubuntu-client)
   - [Mount NFS share in Ubuntu](#mount-nfs-share-in-ubuntu)
+
 
 
 TOC created with https://imthenachoman.github.io/nGitHubTOC/
