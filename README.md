@@ -91,6 +91,10 @@ See the official specifications at https://support.hpe.com/hpesc/public/docDispl
     password=password \
     ***.ddnss.de
     ```
+    `*/1 * * * * ddclient` into
+    ```
+    sudo crontab -e
+    ```
 
 
 ---
@@ -350,5 +354,5 @@ Create a NAS user: `User Management > Users > + > nas_user`
     ```
 - Mount
     ```sh
-    sudo mount 192.168.8.99:/share /media/share_nfs
+    sudo mount 192.168.x.xxx:/share /media/share_nfs
     ```
