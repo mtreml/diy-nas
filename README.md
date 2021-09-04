@@ -534,7 +534,6 @@ This is more or less the maximum performance the hardware controller allows sinc
 
 ## Mount NFS share in Ubuntu
 
-**On the Ubuntu client:**
 - Install NFS client
     ```sh
     sudo apt-get install -y nfs-common
@@ -542,4 +541,16 @@ This is more or less the maximum performance the hardware controller allows sinc
 - Mount
     ```sh
     sudo mount 192.168.x.xxx:/share /media/share_nfs
+    ```
+
+# Backup
+
+- Implement a backup policy
+- Create a backup of the OS drive
+    ```sh
+    sudo dd if=/dev/sdcard of=~/Downloads/NAS/omv6_sdcard_backup.img bs=1M status=progress
+    ```
+- Test restoring it
+    ```sh
+    sudo dd bs=4M if=~/Downloads/NAS/omv6_sdcard_backup.img of=/dev/sdb status=progress
     ```
