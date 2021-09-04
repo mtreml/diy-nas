@@ -4,10 +4,10 @@
 
 - Build a DIY NAS based on OpenMediaVault 6
 - RAID5 for read performance & failure safety
-- Full disk encryption with LUKS
+- Encryption with LUKS
+- Automatic unlocking of encrypted drive in a known network
 - < 10 users
 - Server will shutdown frequently for energy saving
-
 
 
 # Table of contents
@@ -72,16 +72,20 @@ See the official specifications at https://support.hpe.com/hpesc/public/docDispl
 - Upload new firmware and flash it.
 - Get an ILO Advanced Key and enter it in the iLO web interface
 
-## LTE Modem / Router
+## LTE modem / router
 
+- Install OpenWrt on your LTE modem / router if you can
 - Set a static IP outside of dhcp range for your server machine in your router's web console
       ```
       IPv4: 192.168.x.xxx
       Mac-address: xx:xx:xx:xx:xx:xx
       ```
 - Get a real public IP from ISP for your LTE sim card (if it does not have one)
+
+### DDNS
 - Use a DDNS service to map a domain name to your changing IP
 - Configure your router for DDNs with ddclient
+    ddclient runs on the server, but could also be moved to
     ```
     sudo apt install -y ddclient libio-socket-ssl-perl
     ```
@@ -103,7 +107,42 @@ See the official specifications at https://support.hpe.com/hpesc/public/docDispl
     ```
     sudo crontab -e
     ```
+    
+### Tang server    
+- Install a tang server (tested with tang 6.1 on OpenWrt 19.07.8)
+- Edit the xinetd config
+    ```sh
+    vi /etc/xinetd.conf
+    ```
+- Add
+    ```sh
+    service tangd
+    {
+        port            = 8888
+        socket_type     = stream
+        wait            = no
+        user            = root
+        server          = /usr/libexec/tangdw
+        server_args     = /usr/share/tang/cache
+        log_on_success  += USERID
+        log_on_failure  += USERID
+        disable         = no
+    }
+   ```    
+- Generate keys:
+    ```sh
+    /usr/libexec/tangd-keygen /usr/share/tang/db
+    /usr/libexec/tangd-update /usr/share/tang/db /usr/share/tang/cache
+    service xinetd reload
+   ```    
+- Check log
+    ```sh
+    cat /var/log/tangd.log
+    ```    
 
+#### Resources
+- https://github.com/latchset/tang
+- https://moin.meidokon.net/furinkan/sysadmin/Clevis_and_Tang
 
 ---
 
@@ -223,6 +262,7 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
    nano /etc/default/grub
    update-grub
    ```   
+   
 ### LVM
 
 - Create
@@ -262,15 +302,36 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
     |-sde2   8:66   0    1K  0 part  
     `-sde5   8:69   0  976M  0 part  [SWAP]
     ```
+    
+### Clevis
+
+- Install
+    ```sh
+    sudo apt install -y clevis
+    ```
+
+- Check if the tang server is responding
+    ```sh
+    telnet 192.168.x.xxx 8888
+    echo hi | clevis encrypt tang '{"url": "192.168.x.xxx:8888"}' > hi.jwe
+    ```
+
+- Bind the device to tang
+    ```sh
+    clevis luks bind -d /dev/md0 tang '{"url": "192.168.x.xxx:8888"}'
+    ``` 
+    
 ### Resources
 
 - https://superuser.com/questions/1193290/best-order-of-raid-lvm-and-luks
 - https://github.com/gandalfb/openmediavault-full-disk-encryption
 - https://www.paulligocki.com/open-media-vault-essentials/#Set-up-LUKS-Encrypted-Volume-Using-Plugin
 - https://thelinuxchronicles.blogspot.com/2014/04/encrypted-software-raid-5-on-debian.html
+- https://github.com/latchset/clevis
+- https://moin.meidokon.net/furinkan/sysadmin/Clevis_and_Tang 
 
 
-## Benchmarks
+## I/O benchmarks
 
 - Hard Disk Drive (HDD) bays 1 and 2 support 6.0 Gb/s = 750 MB/s SATA
 - HDD bays 3 and 4 support 3.0 Gb/s = 375 MB/s SATA
