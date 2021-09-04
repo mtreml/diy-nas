@@ -1,4 +1,4 @@
-https://github.com/latchset/tang**WIP - comments & additions welcome!**
+**WIP - comments & additions welcome!**
 
 # Goals
 
