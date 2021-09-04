@@ -144,9 +144,11 @@ See the official specifications at https://support.hpe.com/hpesc/public/docDispl
     cat /var/log/tangd.log
     ```    
 
-#### Resources
+### Resources
+- https://openwrt.org/
 - https://github.com/latchset/tang
 - https://moin.meidokon.net/furinkan/sysadmin/Clevis_and_Tang
+
 
 ---
 
