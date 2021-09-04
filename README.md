@@ -411,6 +411,8 @@ This is more or less the maximum performance the hardware controller allows sinc
     sudo ufw allow in http comment 'allow HTTP traffic in'
     sudo ufw allow out https comment 'allow HTTPS traffic out'
     sudo ufw allow in https comment 'allow HTTPS traffic in'
+    sudo ufw allow out 445 comment 'allow SMB traffic out'
+    sudo ufw allow in 445 comment 'allow SMB traffic in'
 
     sudo ufw enable
     sudo ufw status verbose
@@ -525,7 +527,7 @@ This is more or less the maximum performance the hardware controller allows sinc
 
 - Add a line to `/etc/fstab`
     ```sh
-    //192.168.x.xxx/share /media/share cifs credentials=/root/.smbcredentials,uid=ubuntu_user,noperm,rw 0 0
+    //192.168.x.xxx/share /media/share cifs credentials=/root/.smbcredentials,uid=ubuntu_user,noperm,rw,vers=3.0 0 0
     ```
  - Mount
     ```sh
