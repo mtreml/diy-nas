@@ -158,37 +158,49 @@ See the official specifications at https://support.hpe.com/hpesc/public/docDispl
 This guide follows the documentation of OMV version 5.x since 6.x is still under development.
 
 ## Installation and initial configuration of OpenMediaVault 6.0-16
+- Prepare two installation media: 1. ISO to boot from and 2. formated with ext4 to install to
 - Installation: follow the official documentation at https://openmediavault.readthedocs.io/en/5.x/new_user_guide/newuserguide.html#amd64-64-bit-platforms
 - Initial configuration of OMV: follow the official documentation at https://openmediavault.readthedocs.io/en/5.x/new_user_guide/newuserguide.html#initial-configuration
-- Login to the OMV web console
+
+### Login via web console
 - Change the admin password
-- Change auto logout time interval to 30 min
-- Update OMV
-    ```sh
-    apt-get update && apt-get dist-upgrade && omv-update
-    ```
-- Install additional packages
-    ```sh
-    apt-get apt-get install -y screen htop
-    ```
-- Install omv-extras to have access to more plugins
-    ```sh
-    wget -O - https://github.com/OpenMediaVault-Plugin-Developers/packages/raw/master/install | bash 
-    ```
-- Install OMV plugins
-    - a
-- Install flash memory plugin: https://openmediavault.readthedocs.io/en/5.x/new_user_guide/newuserguide.html?highlight=flashmemory#the-flash-memory-plugin-amd64-users-only
-- Configure network interface in OMV's web console
+- Change auto logout time interval to 30 min: `System > Workbench > Auto logout`
+- Configure network interface: `Network > Interfaces > eth0`
     ```
     IPv4: 192.168.x.xxx
-    Netmask: 255:255:255:0
+    Netmask: 255.255.255.0
     Gateway: 192.168.x.xxx
     DNS-Server: 8.8.8.8
     [x] wake on LAN
     ```
 - Create a NAS user: `User Management > Users > + > nas_user`
     - Add to groups `sudo`, `ssh`
-    - Add public ssh key(s) of the Ubuntu client
+    - Add public ssh key
+
+### Login via SSH
+- Login via ssh
+    ```sh
+    ssh root@192.168.x.xxx
+    ```
+- Update OMV
+    ```sh
+    sudo -i
+    nano /etc/default/locale
+    locale-gen
+    apt-get update && apt-get dist-upgrade -y && omv-upgrade -y
+    ```
+- Install additional packages
+    ```sh
+    apt-get install -y screen htop
+    ```
+- Install omv-extras to have access to more plugins
+    ```sh
+    wget -O - https://github.com/OpenMediaVault-Plugin-Developers/packages/raw/master/install | bash 
+    ```
+- Install OMV plugins
+    - clam-av
+    - openmediavault-flashmemory
+
 
 ## Encrypted data drive
 
@@ -204,11 +216,6 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 - Wipe disks before doing anything else
     ```sh
     haveged -n 0 | dd of=/dev/sd[abcd]
-    ```
-
-- Create partition
-    ```sh
-    sth
     ```
 
 ### RAID device on sda, sdb, sdc, sdd
