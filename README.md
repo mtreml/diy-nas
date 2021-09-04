@@ -4,7 +4,7 @@
 
 - Build a DIY NAS 
 - Data and OS live on different physical drives
-- OS drive: OpenMediaVault 6 on microSD card (cloned for backup)
+- OS drive: OpenMediaVault 6.0-16 on microSD card (cloned for backup)
 - Data drive: RAID5 -> LUKS -> LVM -> LUKS for read performance, failure safety and privacy
 - Automatic unlocking of encrypted drive in a known network with Tang & Clevis
 - Server should be able to do unattended shutdowns / reboots for energy saving
@@ -157,7 +157,7 @@ See the official specifications at https://support.hpe.com/hpesc/public/docDispl
 
 This guide follows the documentation of OMV version 5.x since 6.x is still under development.
 
-## Installation and initial configuration of OpenMediaVault (OMV) 6
+## Installation and initial configuration of OpenMediaVault 6.0-16
 - Installation: follow the official documentation at https://openmediavault.readthedocs.io/en/5.x/new_user_guide/newuserguide.html#amd64-64-bit-platforms
 - Initial configuration of OMV: follow the official documentation at https://openmediavault.readthedocs.io/en/5.x/new_user_guide/newuserguide.html#initial-configuration
 - Login to the OMV web console
