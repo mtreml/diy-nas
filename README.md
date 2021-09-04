@@ -20,7 +20,7 @@
   - [LTE modem / router](#lte-modem--router)
     - [DDNS](#ddns)
     - [Tang server    ](#tang-server----)
-      - [Resources](#resources)
+    - [Resources](#resources)
 - [Software](#software)
   - [Installation and initial configuration of OpenMediaVault (OMV) 6](#installation-and-initial-configuration-of-openmediavault-omv-6)
   - [Encrypted data drive](#encrypted-data-drive)
