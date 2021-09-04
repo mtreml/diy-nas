@@ -133,7 +133,10 @@ This guide follows the documentation of OMV version 5.x since 6.x is still under
     DNS-Server: 8.8.8.8
     [x] wake on LAN
     ```
-    
+- Create a NAS user: `User Management > Users > + > nas_user`
+    - Add to groups `sudo`, `ssh`
+    - Add public ssh key(s) of the Ubuntu client
+
 ## Encrypted data drive
 
 The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext4`.
@@ -275,15 +278,99 @@ This is more or less the maximum performance the hardware controller allows sinc
 
 # Secure your server
 
-## SSH
-- Create SSH user group for AllowGroups
+## Force strong user passwords
     ```sh
-    sudo groupadd sshusers
-    sudo usermod -a -G sshusers nas_user
+    sudo apt install libpam-pwquality
+    sudo cp --archive /etc/pam.d/common-password /etc/pam.d/common-password-COPY-$(date +"%Y%m%d%H%M%S")
+    sudo sed -i -r -e "s/^(password\s+requisite\s+pam_pwquality.so)(.*)$/# \1\2         # commented by $(whoami) on $(date +"%Y-%m-%d @ %H:%M:%S")\n\1 retry=3 minlen=10 difok=3 ucredit=-1 lcredit=-1 dcredit=-1 ocredit=-1 maxrepeat=3 gecoschec         # added by $(whoami) on $(date +"%Y-%m-%d @ %H:%M:%S")/" /etc/pam.d/common-password
     ```
-- Copy public ssh key to omv
+## Enable unattended updates
+    ```sh
+    sudo apt install unattended-upgrades apt-listchanges apticron
+    touch /etc/apt/apt.conf.d/51myunattended-upgrades    
+    ```
+    ```sh
+    // Enable the update/upgrade script (0=disable)
+    APT::Periodic::Enable "1";
+
+    // Do "apt-get update" automatically every n-days (0=disable)
+    APT::Periodic::Update-Package-Lists "1";
+
+    // Do "apt-get upgrade --download-only" every n-days (0=disable)
+    APT::Periodic::Download-Upgradeable-Packages "1";
+
+    // Do "apt-get autoclean" every n-days (0=disable)
+    APT::Periodic::AutocleanInterval "7";
+
+    // Send report mail to root
+    //     0:  no report             (or null string)
+    //     1:  progress report       (actually any string)
+    //     2:  + command outputs     (remove -qq, remove 2>/dev/null, add -d)
+    //     3:  + trace on    APT::Periodic::Verbose "2";
+    APT::Periodic::Unattended-Upgrade "1";
+
+    // Automatically upgrade packages from these
+    Unattended-Upgrade::Origins-Pattern {
+          "o=Debian,a=stable";
+          "o=Debian,a=stable-updates";
+          "origin=Debian,codename=${distro_codename},label=Debian-Security";
+    };
+
+    // You can specify your own packages to NOT automatically upgrade here
+    Unattended-Upgrade::Package-Blacklist {
+    };
+
+    // Run dpkg --force-confold --configure -a if a unclean dpkg state is detected to true to ensure that updates get installed even when the system got interrupted during a previous run
+    Unattended-Upgrade::AutoFixInterruptedDpkg "true";
+
+    //Perform the upgrade when the machine is running because we wont be shutting our server down often
+    Unattended-Upgrade::InstallOnShutdown "false";
+
+    // Send an email to this address with information about the packages upgraded.
+    Unattended-Upgrade::Mail "root";
+
+    // Always send an e-mail
+    Unattended-Upgrade::MailOnlyOnError "false";
+
+    // Remove all unused dependencies after the upgrade has finished
+    Unattended-Upgrade::Remove-Unused-Dependencies "true";
+
+    // Remove any new unused dependencies after the upgrade has finished
+    Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
+
+    // Automatically reboot WITHOUT CONFIRMATION if the file /var/run/reboot-required is found after the upgrade.
+    Unattended-Upgrade::Automatic-Reboot "true";
+
+    // Automatically reboot even if users are logged in.
+    Unattended-Upgrade::Automatic-Reboot-WithUsers "true";
+    ```
+    ```sh
+    sudo unattended-upgrade -d --dry-run
+    ```
+
+## Limit access to sudo & su
+- Create user group sudo (already present in Debian) & add users
+    ```sh
+    sudo usermod -a -G sudo nas_user
+    ```
+- Create user group suusers & add users
+    ```sh
+    sudo groupadd suusers
+    sudo usermod -a -G suusers root
+    sudo usermod -a -G suusers nas_user
+    sudo dpkg-statoverride --update --add root suusers 4750 /bin/su
+    ```
+
+## SSH
+- Create SSH user group for AllowGroups (already present in Debian) & add users
+    ```sh
+    sudo groupadd ssh
+    sudo usermod -a -G ssh nas_user
+    ```
+- Generate & copy public ssh key from the client machine to the NAS server
     ```bash
-    ssh-copy-id root@192.168.x.xxx
+    ssh-keygen -t ed25519
+    ssh-copy-id user@192.168.x.xxx
     ```
 - Login via ssh
     ```sh
@@ -292,8 +379,100 @@ This is more or less the maximum performance the hardware controller allows sinc
 - Edit ssh settings
     ```sh
     nano /etc/ssh/sshd_config
+    sudo service sshd restart
+    sudo sshd -T
     ```
-    
+- Remove short moduli
+    ```sh
+    sudo cp --archive /etc/ssh/moduli /etc/ssh/moduli-COPY-$(date +"%Y%m%d%H%M%S")
+    sudo awk '$5 >= 3071' /etc/ssh/moduli | sudo tee /etc/ssh/moduli.tmp
+    sudo mv /etc/ssh/moduli.tmp /etc/ssh/moduli    
+    ```
+- Firewall
+    ```sh
+    sudo apt install ufw
+
+    sudo ufw default deny outgoing comment 'deny all outgoing traffic'
+    sudo ufw default deny incoming comment 'deny all incoming traffic'
+    sudo ufw allow in 2244/tcp comment 'allow incoming SSH'
+    sudo ufw allow out 53 comment 'allow DNS calls out'
+    sudo ufw allow out 123 comment 'allow NTP out'
+    sudo ufw allow out http comment 'allow HTTP traffic out'
+    sudo ufw allow in http comment 'allow HTTP traffic in'
+    sudo ufw allow out https comment 'allow HTTPS traffic out'
+    sudo ufw allow in https comment 'allow HTTPS traffic in'
+
+    sudo ufw enable
+    sudo ufw status verbose
+    ```
+- Iptables ntrusion detection with psad
+    ```sh
+    sudo apt install psad
+    sudo cp --archive /etc/psad/psad.conf /etc/psad/psad.conf-COPY-$(date +"%Y%m%d%H%M%S")
+    nano /etc/psad/psad.conf
+
+    sudo cp --archive /etc/ufw/before.rules /etc/ufw/before.rules-COPY-$(date +"%Y%m%d%H%M%S")
+    sudo cp --archive /etc/ufw/before6.rules /etc/ufw/before6.rules-COPY-$(date +"%Y%m%d%H%M%S")
+    ```
+    Add
+    ```sh
+    # log all traffic so psad can analyze
+    -A INPUT -j LOG --log-tcp-options --log-prefix "[IPTABLES] "
+    -A FORWARD -j LOG --log-tcp-options --log-prefix "[IPTABLES] "
+    ```
+    to `/etc/ufw/before.rules` and `/etc/ufw/before6.rules` at the end of the file before COMMIT.
+
+    ```sh
+    sudo ufw reload
+    sudo psad -R
+    sudo psad --sig-update
+    sudo psad -H
+    sudo psad --fw-analyze
+    sudo psad --Status
+    ```
+- App intrusion detection with fail2ban
+    ```sh
+    sudo apt install fail2ban
+    sudo nano /etc/fail2ban/jail.local
+    ```
+    Add
+    ```sh
+    [DEFAULT]
+    # the IP address range we want to ignore
+    ignoreip = 127.0.0.1/8 [LAN SEGMENT]
+
+    # who to send e-mail to
+    destemail = [your e-mail]
+
+    # who is the email from
+    sender = [your e-mail]
+
+    # since we're using exim4 to send emails
+    mta = mail
+
+    # get email alerts
+    action = %(action_mwl)s
+    ```
+    ```sh
+    cat << EOF | sudo tee /etc/fail2ban/jail.d/ssh.local
+    [sshd]
+    enabled = true
+    banaction = ufw
+    port = ssh
+    filter = sshd
+    logpath = %(sshd_log)s
+    maxretry = 5
+    EOF
+    ```
+    ```sh
+    sudo fail2ban-client start
+    sudo fail2ban-client reload
+    sudo fail2ban-client add sshd # This may fail on some systems if the sshd jail was added by default
+    sudo fail2ban-client status
+    sudo fail2ban-client status sshd
+    ```
+
+
 ## Resources
 - https://github.com/imthenachoman/How-To-Secure-A-Linux-Server
 
@@ -318,15 +497,7 @@ This is more or less the maximum performance the hardware controller allows sinc
   - Client IP: 192.168.x.xxx
   - Read/Write
 
-## Mount smb/cifs share in Ubuntu
-
-**On the NAS server:**
-
-Create a NAS user: `User Management > Users > + > nas_user`
-- Add to groups `sudo`, `ssh`
-- Add public ssh key(s) of the Ubuntu client
-
-**On the Ubuntu client:**
+## Mount smb/cifs share on the (Ubuntu) client
 
 - Install cifs-utils on 
     ```sh
