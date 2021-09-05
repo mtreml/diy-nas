@@ -2,7 +2,7 @@
 
 - Build a DIY NAS 
 - OS drive: OpenMediaVault 6.0-16 on microSD card (cloned for backup)
-- Data drive: RAID5 -> LUKS -> LVM -> LUKS for read performance, failure safety and privacy
+- Data drive: RAID5 -> LUKS -> LVM -> EXT4 for read performance, failure safety and privacy
 - Automatic unlocking of encrypted drive in a known network with Tang & Clevis
 - Server should be able to do unattended shutdowns / reboots for energy saving
 
