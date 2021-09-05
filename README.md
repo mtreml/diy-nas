@@ -312,7 +312,7 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
     ```sh
     clevis luks bind -d /dev/md0 tang '{"url": "192.168.x.xxx:8888"}'
     ``` 
- - Update initial RAM filesystem
+ - Update initial RAM filesystem using dracut
     ```sh
     dracut -fv --regenerate-all
     ``` 
