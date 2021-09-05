@@ -148,6 +148,7 @@ See the official specifications at https://support.hpe.com/hpesc/public/docDispl
 - https://openwrt.org/
 - https://github.com/latchset/tang
 - https://moin.meidokon.net/furinkan/sysadmin/Clevis_and_Tang
+- https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/security_hardening/configuring-automated-unlocking-of-encrypted-volumes-using-policy-based-decryption_security-hardening
 
 
 [TOC](https://github.com/mtreml/diy-nas/blob/main/README.md#table-of-contents)
@@ -295,11 +296,12 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 
 - Create EXT4 filesystem (this takes a while): `Storage > File Systems > + > Create > mrm-raid-vg, ext4`
     
-### Clevis
+### 
+
 
 - Install
     ```sh
-    sudo apt install -y clevis clevis-luks
+    sudo apt install -y clevis clevis-luks clevis-dracut
     ```
 
 - Check if the tang server is responding
@@ -313,7 +315,7 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
     ``` 
  - Update initial RAM filesystem
     ```sh
-    update-initramfs -u -k 'all'
+    dracut -fv --regenerate-all
     ``` 
     
 ### Resources
