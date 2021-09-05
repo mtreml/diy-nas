@@ -301,18 +301,21 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 
 - Install
     ```sh
-    sudo apt install -y clevis
+    sudo apt install -y clevis clevis-luks
     ```
 
 - Check if the tang server is responding
     ```sh
-    telnet 192.168.x.xxx 8888
     echo hi | clevis encrypt tang '{"url": "192.168.x.xxx:8888"}' > hi.jwe
     ```
 
 - Bind the device to tang
     ```sh
     clevis luks bind -d /dev/md0 tang '{"url": "192.168.x.xxx:8888"}'
+    ``` 
+ - Update initial RAM filesystem
+    ```sh
+    update-initramfs -u -k 'all'
     ``` 
     
 ### Resources
@@ -360,15 +363,16 @@ This is more or less the maximum performance the hardware controller allows sinc
 
 ## Force strong user passwords
     ```sh
-    sudo apt install libpam-pwquality
+    sudo apt install -y libpam-pwquality
     sudo cp --archive /etc/pam.d/common-password /etc/pam.d/common-password-COPY-$(date +"%Y%m%d%H%M%S")
     sudo sed -i -r -e "s/^(password\s+requisite\s+pam_pwquality.so)(.*)$/# \1\2         # commented by $(whoami) on $(date +"%Y-%m-%d @ %H:%M:%S")\n\1 retry=3 minlen=10 difok=3 ucredit=-1 lcredit=-1 dcredit=-1 ocredit=-1 maxrepeat=3 gecoschec         # added by $(whoami) on $(date +"%Y-%m-%d @ %H:%M:%S")/" /etc/pam.d/common-password
     ```
 ## Enable unattended updates
     ```sh
-    sudo apt install unattended-upgrades apt-listchanges apticron
-    touch /etc/apt/apt.conf.d/51myunattended-upgrades    
+    sudo apt install -y unattended-upgrades apt-listchanges apticron
+    nano /etc/apt/apt.conf.d/51myunattended-upgrades    
     ```
+    
     ```sh
     // Enable the update/upgrade script (0=disable)
     APT::Periodic::Enable "1";
@@ -424,6 +428,7 @@ This is more or less the maximum performance the hardware controller allows sinc
     // Automatically reboot even if users are logged in.
     Unattended-Upgrade::Automatic-Reboot-WithUsers "true";
     ```
+    
     ```sh
     sudo unattended-upgrade -d --dry-run
     ```
@@ -447,7 +452,7 @@ This is more or less the maximum performance the hardware controller allows sinc
     sudo groupadd ssh
     sudo usermod -a -G ssh nas_user
     ```
-- Generate & copy public ssh key from the client machine to the NAS server
+- Generate & copy new public ssh key from the client machine to the NAS server
     ```bash
     ssh-keygen -t ed25519
     ssh-copy-id user@192.168.x.xxx
@@ -472,11 +477,11 @@ This is more or less the maximum performance the hardware controller allows sinc
 ## Network
 - Firewall
     ```sh
-    sudo apt install ufw
+    sudo apt install -y ufw
 
     sudo ufw default deny outgoing comment 'deny all outgoing traffic'
     sudo ufw default deny incoming comment 'deny all incoming traffic'
-    sudo ufw allow in 2244/tcp comment 'allow incoming SSH'
+    sudo ufw allow in 22/tcp comment 'allow incoming SSH'
     sudo ufw allow out 53 comment 'allow DNS calls out'
     sudo ufw allow out 123 comment 'allow NTP out'
     sudo ufw allow out http comment 'allow HTTP traffic out'
@@ -489,11 +494,11 @@ This is more or less the maximum performance the hardware controller allows sinc
     sudo ufw allow in 8888/tcp comment 'allow tang traffic in'
 
     sudo ufw enable
-    sudo ufw status verbose
+   
     ```
 - Iptables ntrusion detection with psad
     ```sh
-    sudo apt install psad
+    sudo apt install -y psad
     sudo cp --archive /etc/psad/psad.conf /etc/psad/psad.conf-COPY-$(date +"%Y%m%d%H%M%S")
     nano /etc/psad/psad.conf
 
@@ -518,7 +523,7 @@ This is more or less the maximum performance the hardware controller allows sinc
     ```
 - App intrusion detection with fail2ban
     ```sh
-    sudo apt install fail2ban
+    sudo apt install -y fail2ban
     sudo nano /etc/fail2ban/jail.local
     ```
     Add
