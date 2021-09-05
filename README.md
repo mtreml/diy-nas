@@ -21,7 +21,9 @@
     - [Tang server    ](#tang-server----)
     - [Resources](#resources)
 - [Software](#software)
-  - [Installation and initial configuration of OpenMediaVault (OMV) 6](#installation-and-initial-configuration-of-openmediavault-omv-6)
+  - [Installation and initial configuration of OpenMediaVault 6.0-16](#installation-and-initial-configuration-of-openmediavault-60-16)
+    - [Login via web console](#login-via-web-console)
+    - [Login via SSH](#login-via-ssh)
   - [Encrypted data drive](#encrypted-data-drive)
     - [Partitions of same size on every physical disk](#partitions-of-same-size-on-every-physical-disk)
     - [RAID device on sda, sdb, sdc, sdd](#raid-device-on-sda-sdb-sdc-sdd)
@@ -44,6 +46,7 @@
   - [Mount smb/cifs share on the (Ubuntu) client](#mount-smbcifs-share-on-the-ubuntu-client)
   - [Mount NFS share in Ubuntu](#mount-nfs-share-in-ubuntu)
 - [Backup](#backup)
+
 
 
 TOC created with https://imthenachoman.github.io/nGitHubTOC/
