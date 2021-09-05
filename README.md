@@ -28,7 +28,7 @@
     - [Encrypted LUKS container on the RAID device](#encrypted-luks-container-on-the-raid-device)
     - [LVM](#lvm)
     - [File system](#file-system)
-    - [Clevis](#clevis)
+    - [](#)
     - [Resources](#resources-1)
   - [I/O benchmarks](#io-benchmarks)
     - [Resources](#resources-2)
