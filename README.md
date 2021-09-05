@@ -184,7 +184,7 @@ This guide follows the documentation of OMV version 5.x since 6.x is still under
 - Update OMV
     ```sh
     sudo -i
-    nano /etc/default/locale
+    nano /etc/locale.gen
     locale-gen
     apt-get update && apt-get dist-upgrade -y && omv-upgrade -y
     ```
@@ -230,18 +230,18 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 
 - Install
     ```sh
-     sudo apt instal -y cryptsetup
+     sudo apt install -y cryptsetup
     ```
 
 - Benchmark 
     ```sh
-     cryptsetup benchmark
+    cryptsetup benchmark
     ```
   This gives 1555.8 MiB/s (encryption) and 1652.4 MiB/s (decryption) for aes-xts with 256b key.
  
 - Create a LUKS container
     ```sh
-     cryptsetup luksFormat --cipher aes-xts-plain64 --hash sha512 -s 512 /dev/md0
+    cryptsetup luksFormat --cipher aes-xts-plain64 --hash sha512 -s 512 /dev/md0
     ```
 - Show info
     ```sh
@@ -260,54 +260,38 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
     crypt-raid UUID=xxxx none luks
     ```
 - Recreate initramfs
-  ```sh
-  update-initramfs -u -k all
-  ```
+    ```sh
+    update-initramfs -u -k all
+    ```
 - Change GRUB_TIMEOUT to 1s
    ```sh
    nano /etc/default/grub
    update-grub
-   ```   
+   ``` 
+- Purge old kernels
+   ```sh
+   uname -r
+   apt remove --purge linux-image-
+   ``` 
    
 ### LVM
 
-- Create
+- Specify md0 as physical volume (make sure dataalignment matches chunk size of RAID)
     ```sh
-    # Specify md0 as physical volume (make sure dataalignment matches chunk size of RAID)
-    pvcreate --dataalignment=512 /dev/crypt-raid
-    
-    # Create new volume group
+    pvcreate --dataalignment=512 /dev/mapper/crypt-raid
+    ```
+- Create new volume group
+    ```sh
     vgcreate raid-vg /dev/mapper/crypt-raid
-    
-    # Create logical volume
+    ```
+- Create logical volume that uses the whole free disk space
+    ```sh
     lvcreate -l 100%FREE --name mrm raid-vg
     ```
 
 ### File system
 
-- `Storage > File Systems > + > Create`
-
-- EXT4 on RAID device: this takes ~ 3 mins
-    ```sh
-    screen -d -m mkfs.ext4 -m 0 /dev/mapper/raid-vg-mrm
-    ```
-- Verify
-    ```sh
-    lsblk
-    NAME   MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
-    sda      8:0    0  3.6T  0 disk  
-    `-md0    9:0    0 10.9T  0 raid5 
-    sdb      8:16   0  3.6T  0 disk  
-    `-md0    9:0    0 10.9T  0 raid5 
-    sdc      8:32   0  3.6T  0 disk  
-    `-md0    9:0    0 10.9T  0 raid5 
-    sdd      8:48   0  3.6T  0 disk  
-    `-md0    9:0    0 10.9T  0 raid5 
-    sde      8:64   0 14.8G  0 disk  
-    |-sde1   8:65   0 13.9G  0 part  /
-    |-sde2   8:66   0    1K  0 part  
-    `-sde5   8:69   0  976M  0 part  [SWAP]
-    ```
+- Create EXT4 filesystem (this takes a while): `Storage > File Systems > + > Create > mrm-raid-vg, ext4`
     
 ### Clevis
 
@@ -331,7 +315,6 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 
 - https://superuser.com/questions/1193290/best-order-of-raid-lvm-and-luks
 - https://github.com/gandalfb/openmediavault-full-disk-encryption
-- https://www.paulligocki.com/open-media-vault-essentials/#Set-up-LUKS-Encrypted-Volume-Using-Plugin
 - https://thelinuxchronicles.blogspot.com/2014/04/encrypted-software-raid-5-on-debian.html
 - https://github.com/latchset/clevis
 - https://moin.meidokon.net/furinkan/sysadmin/Clevis_and_Tang 
