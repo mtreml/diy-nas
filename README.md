@@ -152,7 +152,7 @@ See the official specifications at https://support.hpe.com/hpesc/public/docDispl
 - https://moin.meidokon.net/furinkan/sysadmin/Clevis_and_Tang
 
 
-https://github.com/mtreml/diy-nas/blob/main/README.md#table-of-contents
+[TOC](https://github.com/mtreml/diy-nas/blob/main/README.md#table-of-contents)
 ---
 
 
@@ -352,7 +352,7 @@ This is more or less the maximum performance the hardware controller allows sinc
 
 
 
-https://github.com/mtreml/diy-nas/blob/main/README.md#table-of-contents
+[TOC](https://github.com/mtreml/diy-nas/blob/main/README.md#table-of-contents)
 ---
 
 
@@ -563,8 +563,7 @@ https://github.com/mtreml/diy-nas/blob/main/README.md#table-of-contents
 - https://github.com/imthenachoman/How-To-Secure-A-Linux-Server
 
 
-
-https://github.com/mtreml/diy-nas/blob/main/README.md#table-of-contents
+[TOC](https://github.com/mtreml/diy-nas/blob/main/README.md#table-of-contents)
 ---
 
 
@@ -622,7 +621,7 @@ https://github.com/mtreml/diy-nas/blob/main/README.md#table-of-contents
     ```
 
 
-https://github.com/mtreml/diy-nas/blob/main/README.md#table-of-contents
+[TOC](https://github.com/mtreml/diy-nas/blob/main/README.md#table-of-contents)
 ---
 
 # Backup
