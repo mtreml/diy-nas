@@ -175,13 +175,17 @@ This guide follows the documentation of OMV version 5.x since 6.x is still under
     [x] wake on LAN
     ```
 - Create a NAS user: `User Management > Users > + > nas_user`
-    - Add to groups `sudo`, `ssh`
-    - Add public ssh key
+- **Careful:** adding/removing public ssh keys via the omv web console will change `sshd_config`!
 
 ### Login via SSH
+- Generate & copy new public ssh key from the client machine to the NAS server
+    ```bash
+    ssh-keygen -t ed25519
+    ssh-copy-id nas_user@192.168.x.xxx
+    ```
 - Login via ssh
     ```sh
-    ssh root@192.168.x.xxx
+    ssh nas_user@192.168.x.xxx
     ```
 - Update OMV
     ```sh
@@ -446,19 +450,12 @@ This is more or less the maximum performance the hardware controller allows sinc
     ```
 
 ## SSH
+- **Careful:** adding/removing public ssh keys via the omv web console will change `sshd_config`!
+
 - Create SSH user group for AllowGroups (already present in Debian) & add users
     ```sh
     sudo groupadd ssh
     sudo usermod -a -G ssh nas_user
-    ```
-- Generate & copy new public ssh key from the client machine to the NAS server
-    ```bash
-    ssh-keygen -t ed25519
-    ssh-copy-id user@192.168.x.xxx
-    ```
-- Login via ssh
-    ```sh
-    ssh root@192.168.x.xxx
     ```
 - Edit ssh settings
     ```sh
