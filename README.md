@@ -112,7 +112,7 @@ See the official specifications at https://support.hpe.com/hpesc/public/docDispl
     ```
     
 ### Tang server    
-- Install a tang server (tested with tang 6.1 on OpenWrt 19.07.8)
+- Install a tang server (tested with tang 6.1 on OpenWrt 21.02.0)
 - Edit the xinetd config
     ```sh
     vi /etc/xinetd.conf
@@ -311,7 +311,11 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
     ```sh
     echo hi | clevis encrypt tang '{"url": "192.168.x.xxx:8888"}' > hi.jwe
     ```
-
+- List and unbind existing binds
+    ```sh
+    clevis luks list /dev/md0
+    clevis luks unbind -d /dev/md0 -s 1
+    ``` 
 - Bind the device to tang
     ```sh
     clevis luks bind -d /dev/md0 tang '{"url": "192.168.x.xxx:8888"}'
@@ -490,6 +494,8 @@ This is more or less the maximum performance the hardware controller allows sinc
     sudo ufw allow in 8888/tcp comment 'allow tang traffic in'
 
     sudo ufw enable
+    
+    sudo ufw status
    
     ```
 - Iptables ntrusion detection with psad
