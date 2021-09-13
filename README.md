@@ -106,12 +106,12 @@ See the official specifications at https://support.hpe.com/hpesc/public/docDispl
     password=password \
     ***.ddnss.de
     ```
-    `*/1 * * * * ddclient` into
+    Add `*/1 * * * * ddclient` into
     ```
     sudo crontab -e
     ```
     
-### Tang server    
+### Tang server on OpenWrt   
 - Install a tang server (tested with tang 6.1 on OpenWrt 21.02.0)
 - Edit the xinetd config
     ```sh
