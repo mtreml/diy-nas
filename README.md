@@ -299,7 +299,7 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
 
 - Create EXT4 filesystem (this takes a while): `Storage > File Systems > + > Create > mrm-raid-vg, ext4`
     
-### 
+### Clevis
 
 
 - Install
@@ -562,7 +562,7 @@ This is more or less the maximum performance the hardware controller allows sinc
     sudo fail2ban-client reload
     sudo fail2ban-client add sshd # This may fail on some systems if the sshd jail was added by default
     sudo fail2ban-client status
-    sudo fail2ban-client status sshd
+    sudo fail2baclevis luks unbind -d /dev/sda2 -s 1n-client status sshd
     ```
 
 
