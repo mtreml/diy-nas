@@ -313,7 +313,7 @@ The following scheme is used for the data drives: `RAID --> LUKS --> LVM --> ext
     ```
 - List and unbind existing binds
     ```sh
-    clevis luks list /dev/md0
+    clevis luks list -d /dev/md0
     clevis luks unbind -d /dev/md0 -s 1
     ``` 
 - Bind the device to tang
