@@ -16,7 +16,7 @@
     - [iLO Firmware Update v2.10 (15.1.2015) -> v2.78 (22.4.2021)](#ilo-firmware-update-v210-1512015---v278-2242021)
   - [LTE modem / router](#lte-modem--router)
     - [DDNS](#ddns)
-    - [Tang server on OpenWrt   ](#tang-server-on-openwrt---)
+    - [Tang server on OpenWrt](#tang-server-on-openwrt)
     - [Resources](#resources)
 - [Software](#software)
   - [Installation and initial configuration of OpenMediaVault 6.0-16](#installation-and-initial-configuration-of-openmediavault-60-16)
