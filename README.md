@@ -587,7 +587,7 @@ This is more or less the maximum performance the hardware controller allows sinc
 
 - Add a line to `/etc/fstab`
     ```sh
-    //192.168.x.xxx/share /media/share cifs credentials=/root/.smbcredentials,uid=ubuntu_user,noperm,rw,vers=3.0 0 0
+    //192.168.x.xxx/<share> /media/share cifs credentials=/root/.smbcredentials,uid=ubuntu_user,noperm,rw,vers=3.0 0 0
     ```
 - Create mount point
     ```sh
@@ -610,7 +610,7 @@ This is more or less the maximum performance the hardware controller allows sinc
     ```
 - Mount
     ```sh
-    sudo mount 192.168.x.xxx:/share /media/share_nfs
+    sudo mount 192.168.x.xxx:/<share> /media/share_nfs
     ```
 
 
