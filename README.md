@@ -589,7 +589,11 @@ This is more or less the maximum performance the hardware controller allows sinc
     ```sh
     //192.168.x.xxx/share /media/share cifs credentials=/root/.smbcredentials,uid=ubuntu_user,noperm,rw,vers=3.0 0 0
     ```
- - Mount
+- Create mount point
+    ```sh
+    sudo mkdir /media/share
+    ```
+- Mount
     ```sh
     sudo mount -a
     ```
@@ -599,6 +603,10 @@ This is more or less the maximum performance the hardware controller allows sinc
 - Install NFS client
     ```sh
     sudo apt-get install -y nfs-common
+    ```
+- Create mount point
+    ```sh
+    sudo mkdir /media/share_nfs
     ```
 - Mount
     ```sh
