@@ -611,7 +611,10 @@ This is more or less the maximum performance the hardware controller allows sinc
 
 # Backup
 
+## Data drive
 - Implement a backup policy
+
+## OS
 - Create a backup of the OS drive
     ```sh
     sudo dd if=/dev/sdcard of=~/Downloads/NAS/omv6_sdcard_backup.img bs=1M status=progress
